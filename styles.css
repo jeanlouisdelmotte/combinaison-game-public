@@ -1,0 +1,259 @@
+body {
+    font-family: 'Luckiest Guy', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #ffffff;
+	background-color: black;
+}
+
+.screen {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    width: 800px;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    animation: glow 1.5s infinite;
+}
+
+#home-screen ul {
+    text-align: left;
+    list-style-position: inside;
+}
+
+#timer, #score {
+    font-size: 2em;
+    margin: 15px 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#instruction {
+    font-size: 4em;
+    margin: 15px 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+    font-family: 'Arial Black', sans-serif;
+}
+
+#feedback {
+    font-size: 1.5em;
+    margin-top: 20px;
+    animation: fadein 2s;
+}
+
+.correct {
+    color: #4CAF50;
+    animation: flash-correct 0.5s;
+}
+
+.incorrect {
+    color: #FF5252;
+    animation: shake 0.5s;
+}
+
+button {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #FFD700;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #FFBF00;
+}
+
+#leaderboard {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #3B3B3B; /* Fond gris anthracite */
+    color: #ffffff; /* Texte en blanc pour contraster */
+}
+
+#leaderboard th, #leaderboard td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #555; /* Bordure plus sombre pour mieux contraster */
+}
+
+#leaderboard th {
+    background-color: #4a4a4a; /* En-tête légèrement plus sombre */
+}
+
+#leaderboard tr:nth-child(even) {
+    background-color: #2A2A2A; /* Fond plus sombre pour les lignes paires */
+}
+
+#leaderboard tr:hover {
+    background-color: #111111; /* Effet de survol */
+}
+
+#leaderboard .first {
+    color: #FFD700; /* Or */
+}
+
+#leaderboard .second {
+    color: #C0C0C0; /* Argent */
+}
+
+#leaderboard .third {
+    color: #CD7F32; /* Bronze */
+}
+
+#home-screen p, #home-screen ul {
+    font-family: 'Arial', sans-serif;
+}
+
+#difficulty-buttons {
+    margin-top: 20px;
+}
+
+.difficulty-btn {
+    margin: 5px;
+}
+
+.difficulty-btn[data-difficulty="easy"] {
+    background-color: #4CAF50; /* Vert doux */
+}
+
+.difficulty-btn[data-difficulty="medium"] {
+    background-color: #FFC107; /* Jaune moyen */
+}
+
+.difficulty-btn[data-difficulty="hard"] {
+    background-color: #FF5722; /* Orange vif */
+}
+
+.difficulty-btn[data-difficulty="extreme"] {
+    background-color: #FF0000; /* Rouge tranchant */
+}
+
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 20px #ffffff, 0 0 30px #ffffff, 0 0 40px #ffffff; }
+    50% { text-shadow: none; }
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes flash-correct {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+@keyframes highlight {
+    0%, 100% { color: #ffffff; }
+    50% { color: #707070; }
+}
+
+.highlight {
+    animation: highlight 0.2s;
+}
+
+#result-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#player-name {
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+#save-score-button, #return-home-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    background-color: #FFD700;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#save-score-button:hover, #return-home-button:hover {
+    background-color: #FFBF00;
+}
+
+.tutorial-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+	background-color: white;
+}
+
+#tutorial-screen {
+    text-align: center;
+    background-color: #3B3B3B; /* Fond gris anthracite */
+    color: #ffffff; /* Texte en blanc pour contraster */
+	width: 800px;
+}
+
+#tutorial-screen table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 80%;
+}
+
+#tutorial-screen th, #tutorial-screen td {
+    border-bottom: 1px solid #555; /* Bordure plus sombre pour mieux contraster */
+    padding: 10px;
+    text-align: left;
+}
+
+#tutorial-screen th {
+    background-color: #4a4a4a; /* En-tête légèrement plus sombre */
+}
+
+#tutorial-screen tr:nth-child(even) {
+    background-color: #2A2A2A; /* Fond plus sombre pour les lignes paires */
+}
+
+#tutorial-screen tr:hover {
+    background-color: #111111; /* Effet de survol */
+}
+
+#back-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}

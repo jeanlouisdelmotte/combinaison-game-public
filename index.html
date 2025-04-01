@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de Combinaisons Clavier</title>
+    <link rel="stylesheet" href="styles.css">
+	<!-- <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> -->
+	<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div id="home-screen" class="screen">
+        <h1>Jeu de Combinaisons Clavier</h1>
+        <p>Les règles du jeu :</p>
+        <ul>
+            <li>Appuyez sur les combinaisons de touches demandées.</li>
+            <li>Vous avez un temps limité pour obtenir le meilleur score.</li>
+            <li>Bonnes réponses : +1 point, Mauvaises réponses : -1 point.</li>
+        </ul>
+        <div id="difficulty-buttons">
+            <button class="difficulty-btn" data-difficulty="easy">Facile (10s)</button>
+            <button class="difficulty-btn" data-difficulty="medium">Moyen (15s)</button>
+            <button class="difficulty-btn" data-difficulty="hard">Difficile (20s)</button>
+            <button class="difficulty-btn" data-difficulty="extreme">Extrême (30s)</button>
+        </div>
+		<div>
+			<button id="tutorial-btn" class="tutorial-btn">
+				Tutoriel : voir les raccourcis
+			</button>
+		</div>
+    </div>
+
+    <div id="game-screen" class="screen" style="display: none;">
+        <div id="timer">10</div>
+        <div id="instruction">Appuyez sur...</div>
+        <div id="score">Score: 0</div>
+        <div id="feedback"></div>
+    </div>
+	
+	<div id="tutorial-screen" style="display: none;">
+		<h2>Tutoriel des Raccourcis</h2>
+		<table>
+			<!-- <thead>
+				<tr>
+					<th>Raccourci</th>
+					<th>Description</th>
+				</tr>
+			</thead> -->
+<tbody>
+    <!-- Catégorie Facile -->
+    <tr>
+        <td colspan="2" style="font-family: Arial, sans-serif; font-weight: bold; text-align: left; font-size: 25px;">Facile</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + C</td>
+        <td style="font-family: Arial, sans-serif;">Copier</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + V</td>
+        <td style="font-family: Arial, sans-serif;">Coller</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + X</td>
+        <td style="font-family: Arial, sans-serif;">Couper</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + Z</td>
+        <td style="font-family: Arial, sans-serif;">Annuler</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + S</td>
+        <td style="font-family: Arial, sans-serif;">Sauvegarder</td>
+    </tr>
+
+    <!-- Catégorie Moyen -->
+    <tr>
+        <td colspan="2" style="font-family: Arial, sans-serif; font-weight: bold; text-align: left; font-size: 25px;">Moyen</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + A</td>
+        <td style="font-family: Arial, sans-serif;">Sélectionner tout</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + Y</td>
+        <td style="font-family: Arial, sans-serif;">Refaire</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + F</td>
+        <td style="font-family: Arial, sans-serif;">Rechercher</td>
+    </tr>
+
+    <!-- Catégorie Difficile -->
+    <tr>
+        <td colspan="2" style="font-family: Arial, sans-serif; font-weight: bold; text-align: left; font-size: 25px;">Difficile</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + P</td>
+        <td style="font-family: Arial, sans-serif;">Imprimer</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + H</td>
+        <td style="font-family: Arial, sans-serif;">Remplacer</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + O</td>
+        <td style="font-family: Arial, sans-serif;">Ouvrir</td>
+    </tr>
+
+    <!-- Catégorie Extrême -->
+    <tr>
+        <td colspan="2" style="font-family: Arial, sans-serif; font-weight: bold; text-align: left; font-size: 25px;">Extrême</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + B</td>
+        <td style="font-family: Arial, sans-serif;">Gras</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + I</td>
+        <td style="font-family: Arial, sans-serif;">Italique</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + U</td>
+        <td style="font-family: Arial, sans-serif;">Souligner</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Fin</td>
+        <td style="font-family: Arial, sans-serif;">Aller à la Fin</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Début</td>
+        <td style="font-family: Arial, sans-serif;">Aller au Début</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + Maj + Flèche Gauche</td>
+        <td style="font-family: Arial, sans-serif;">Sélectionner le mot à gauche</td>
+    </tr>
+    <tr>
+        <td style="font-family: Arial, sans-serif;">Ctrl + Maj + Flèche Droite</td>
+        <td style="font-family: Arial, sans-serif;">Sélectionner le mot à droite</td>
+    </tr>
+</tbody>
+
+		</table>
+		<button id="back-btn">Retour</button>
+	</div>
+	
+    <div id="result-screen" class="screen" style="display: none;">
+        <h1>Résultats</h1>
+        <p id="final-score">Votre score : 0</p>
+        <input type="text" id="player-name" placeholder="Entrez votre nom">
+        <button id="save-score-button">Enregistrer le score</button>
+        <button id="return-home-button">Retour à l'Accueil</button>
+    </div>
+
+    <div id="leaderboard-screen" class="screen" style="display: none;">
+        <h1>Classement des Meilleurs Scores</h1>
+        <table id="leaderboard">
+            <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Nom</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Scores will be dynamically inserted here -->
+            </tbody>
+        </table>
+        <button id="replay-button">Rejouer</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
