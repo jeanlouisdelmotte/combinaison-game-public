@@ -1,25 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    // Import the functions you need from the SDKs you need
-    // import { initializeApp } from "firebase/app";
-    // import { getDatabase } from "firebase/database";
-    
-    // Configuration Firebase (à remplacer par votre configuration)
     const firebaseConfig = {
         apiKey: "AIzaSyBuFLI9BEjdHmyplBcprSKSdCHCtv8hxtw",
         authDomain: "combinaison-game-db.firebaseapp.com",
-        //databaseURL: "https://combinaison-game-db-default-rtdb.firebaseio.com",
-        databaseURL: "https://combinaison-game-db-default-rtdb.europe-west1.firebasedatabase.app/", // Mettez à jour cette URL
+        databaseURL: "https://combinaison-game-db-default-rtdb.europe-west1.firebasedatabase.app/",
         projectId: "combinaison-game-db",
         storageBucket: "combinaison-game-db.appspot.com",
         messagingSenderId: "821232649609",
         appId: "1:821232649609:web:507734fcc2b4aa8a4d8d58"
     };
 
-    // Initialisez Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-    
+
     const homeScreen = document.getElementById('home-screen');
     const gameScreen = document.getElementById('game-screen');
     const resultScreen = document.getElementById('result-screen');
@@ -49,11 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let instructions = [];
 
     const showLeaderboardButton = document.getElementById('show-leaderboard-button');
-    
+
     showLeaderboardButton.addEventListener('click', () => {
         fetchScores(currentDifficulty);
     });
-    
+
     const difficultySettings = {
         easy: {
             time: 10,
@@ -132,74 +124,60 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200); // Durée de l'animation
     }
 
-function endGame() {
-    gameScreen.style.display = 'none';
-    resultScreen.style.display = 'block';
-    finalScoreElement.textContent = `Votre score : ${score}`;
-    fetchScores(currentDifficulty); // Afficher le leaderboard à la fin du jeu
-}
+    function endGame() {
+        gameScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+        finalScoreElement.textContent = `Votre score : ${score}`;
+        // Ne pas afficher le leaderboard automatiquement à la fin du jeu
+    }
 
-    /*function saveScore() {
+    function formatDate(date) {
+        return date.toLocaleString('fr-FR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'Europe/Paris'
+        });
+    }
+
+    function saveScore() {
         const playerName = playerNameInput.value.trim();
         if (playerName) {
-            let scores = JSON.parse(localStorage.getItem(`scores_${currentDifficulty}`)) || [];
-            scores.push({ name: playerName, score: score, date: new Date().toLocaleString() });
-            scores.sort((a, b) => b.score - a.score);
-            if (scores.length > 10) {
-                scores.pop();
-            }
-            localStorage.setItem(`scores_${currentDifficulty}`, JSON.stringify(scores));
-            showLeaderboard(scores);
+            // Sauvegarder le score dans Firebase avec la date formatée
+            const scoresRef = firebase.database().ref(`scores/${currentDifficulty}`);
+            const newScoreRef = scoresRef.push();
+            newScoreRef.set({
+                name: playerName,
+                score: score,
+                date: formatDate(new Date())
+            });
+
+            // Récupérer et afficher les scores
+            fetchScores(currentDifficulty);
         }
-    }*/
-
-function formatDate(date) {
-    return date.toLocaleString('fr-FR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone: 'Europe/Paris'
-    });
-}
-    
-function saveScore() {
-    const playerName = playerNameInput.value.trim();
-    if (playerName) {
-        // Sauvegarder le score dans Firebase avec la date formatée
-        const scoresRef = firebase.database().ref(`scores/${currentDifficulty}`);
-        const newScoreRef = scoresRef.push();
-        newScoreRef.set({
-            name: playerName,
-            score: score,
-            date: formatDate(new Date())
-        });
-
-        // Récupérer et afficher les scores
-        fetchScores(currentDifficulty);
     }
-}
 
+    function fetchScores(difficulty) {
+        const scoresRef = firebase.database().ref(`scores/${difficulty}/`);
+        scoresRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            const scores = Object.keys(data).map(key => ({
+                id: key,
+                name: data[key].name,
+                score: data[key].score,
+                date: data[key].date
+            }));
+            showLeaderboard(scores, difficulty);
+        });
+    }
 
-function fetchScores(difficulty) {
-    const scoresRef = firebase.database().ref(`scores/${difficulty}/`);
-    scoresRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        const scores = Object.keys(data).map(key => ({
-            id: key,
-            name: data[key].name,
-            score: data[key].score,
-            date: data[key].date
-        }));
-        showLeaderboard(scores, difficulty);
-    });
-}
-
-    /*function showLeaderboard(scores) {
+    function showLeaderboard(scores, difficulty) {
         resultScreen.style.display = 'none';
         leaderboardScreen.style.display = 'block';
         leaderboardElement.innerHTML = '';
+        scores.sort((a, b) => b.score - a.score);
         scores.forEach((score, index) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -210,46 +188,26 @@ function fetchScores(difficulty) {
             `;
             leaderboardElement.appendChild(tr);
         });
-    }*/
-
-function showLeaderboard(scores, difficulty) {
-    resultScreen.style.display = 'none';
-    leaderboardScreen.style.display = 'block';
-    leaderboardElement.innerHTML = '';
-    scores.sort((a, b) => b.score - a.score);
-    scores.forEach((score, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td class="${index === 0 ? 'first' : index === 1 ? 'second' : index === 2 ? 'third' : ''}">${index + 1}</td>
-            <td>${score.name}</td>
-            <td>${score.score}</td>
-            <td>${score.date}</td>
-        `;
-        leaderboardElement.appendChild(tr);
-    });
-    // Afficher le titre du niveau de difficulté
-    document.getElementById('leaderboard-title').textContent = `Leaderboard - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
-}
-
+        // Afficher le titre du niveau de difficulté
+        document.getElementById('leaderboard-title').textContent = `Leaderboard - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
+    }
 
     function replayGame() {
-    leaderboardScreen.style.display = 'none';
-    homeScreen.style.display = 'block';
-}
+        leaderboardScreen.style.display = 'none';
+        homeScreen.style.display = 'block';
+    }
 
     function returnToHome() {
-    resultScreen.style.display = 'none';
-    homeScreen.style.display = 'block';
-}
+        resultScreen.style.display = 'none';
+        homeScreen.style.display = 'block';
+    }
 
-difficultyButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const difficulty = button.getAttribute('data-difficulty');
-        startGame(difficulty);
-        //fetchScores(difficulty); // Récupérer les scores pour le niveau de difficulté sélectionné
+    difficultyButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const difficulty = button.getAttribute('data-difficulty');
+            startGame(difficulty);
+        });
     });
-});
-
 
     saveScoreButton.addEventListener('click', saveScore);
     replayButton.addEventListener('click', replayGame);
