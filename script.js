@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         finalScoreElement.textContent = `Votre score : ${score}`;
     }
 
-    function saveScore() {
+    /*function saveScore() {
         const playerName = playerNameInput.value.trim();
         if (playerName) {
             let scores = JSON.parse(localStorage.getItem(`scores_${currentDifficulty}`)) || [];
@@ -139,12 +139,58 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem(`scores_${currentDifficulty}`, JSON.stringify(scores));
             showLeaderboard(scores);
         }
+    }*/
+
+        function saveScore() {
+        const playerName = playerNameInput.value.trim();
+        if (playerName) {
+            // Sauvegarder le score dans Firebase
+            const scoresRef = firebase.database().ref('scores/' + playerName);
+            scoresRef.set({
+                name: playerName,
+                score: score,
+                date: new Date().toISOString()
+            });
+
+            // Récupérer et afficher les scores
+            fetchScores();
+        }
     }
 
-    function showLeaderboard(scores) {
+    function fetchScores() {
+        const scoresRef = firebase.database().ref('scores/');
+        scoresRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            const scores = Object.keys(data).map(key => ({
+                name: data[key].name,
+                score: data[key].score,
+                date: data[key].date
+            }));
+            showLeaderboard(scores);
+        });
+    }
+
+    /*function showLeaderboard(scores) {
         resultScreen.style.display = 'none';
         leaderboardScreen.style.display = 'block';
         leaderboardElement.innerHTML = '';
+        scores.forEach((score, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="${index === 0 ? 'first' : index === 1 ? 'second' : index === 2 ? 'third' : ''}">${index + 1}</td>
+                <td>${score.name}</td>
+                <td>${score.score}</td>
+                <td>${score.date}</td>
+            `;
+            leaderboardElement.appendChild(tr);
+        });
+    }*/
+
+        function showLeaderboard(scores) {
+        resultScreen.style.display = 'none';
+        leaderboardScreen.style.display = 'block';
+        leaderboardElement.innerHTML = '';
+        scores.sort((a, b) => b.score - a.score);
         scores.forEach((score, index) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
