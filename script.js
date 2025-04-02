@@ -131,8 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const playerName = playerNameInput.value.trim();
         if (playerName) {
             // Sauvegarder le score dans Firebase
-            const scoresRef = ref(database, 'scores/' + playerName);
-            set(scoresRef, {
+            const scoresRef = firebase.database().ref('scores/' + playerName);
+            scoresRef.set({
                 name: playerName,
                 score: score,
                 date: new Date().toISOString()
@@ -144,8 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function fetchScores() {
-        const scoresRef = ref(database, 'scores/');
-        onValue(scoresRef, (snapshot) => {
+        const scoresRef = firebase.database().ref('scores/');
+        scoresRef.on('value', (snapshot) => {
             const data = snapshot.val();
             const scores = Object.keys(data).map(key => ({
                 name: data[key].name,
