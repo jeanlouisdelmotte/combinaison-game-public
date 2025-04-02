@@ -168,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scoresRef.on('value', (snapshot) => {
             const data = snapshot.val();
             const scores = Object.keys(data).map(key => ({
+                id: key,
                 name: data[key].name,
                 score: data[key].score,
                 date: data[key].date
