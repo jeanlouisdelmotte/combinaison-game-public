@@ -146,17 +146,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }*/
 
-        function saveScore() {
+    function saveScore() {
         const playerName = playerNameInput.value.trim();
         if (playerName) {
             // Sauvegarder le score dans Firebase
-            const scoresRef = firebase.database().ref('scores/' + playerName);
-            scoresRef.set({
+            const scoresRef = firebase.database().ref('scores');
+            const newScoreRef = scoresRef.push();
+            newScoreRef.set({
                 name: playerName,
                 score: score,
                 date: new Date().toISOString()
             });
-
+    
             // Récupérer et afficher les scores
             fetchScores();
         }
