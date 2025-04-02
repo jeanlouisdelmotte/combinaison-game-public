@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const firebaseConfig = {
         apiKey: "AIzaSyBuFLI9BEjdHmyplBcprSKSdCHCtv8hxtw",
         authDomain: "combinaison-game-db.firebaseapp.com",
-        databaseURL: "https://combinaison-game-db-default-rtdb.firebaseio.com",
+        //databaseURL: "https://combinaison-game-db-default-rtdb.firebaseio.com",
+        databaseURL: "https://combinaison-game-db-default-rtdb.europe-west1.firebasedatabase.app/", // Mettez à jour cette URL
         projectId: "combinaison-game-db",
         storageBucket: "combinaison-game-db.appspot.com",
         messagingSenderId: "821232649609",
