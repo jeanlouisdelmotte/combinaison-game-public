@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Configuration Firebase (à remplacer par votre configuration)
+    const firebaseConfig = {
+        apiKey: "AIzaSyBuFLI9BEjdHmyplBcprSKSdCHCtv8hxtw",
+        authDomain: "combinaison-game-db.firebaseapp.com",
+        databaseURL: "https://combinaison-game-db-default-rtdb.firebaseio.com",
+        projectId: "combinaison-game-db",
+        storageBucket: "combinaison-game-db.appspot.com",
+        messagingSenderId: "821232649609",
+        appId: "1:821232649609:web:507734fcc2b4aa8a4d8d58"
+    };
+
+    // Initialisez Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
     const homeScreen = document.getElementById('home-screen');
     const gameScreen = document.getElementById('game-screen');
     const resultScreen = document.getElementById('result-screen');
