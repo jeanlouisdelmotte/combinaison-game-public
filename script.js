@@ -1,20 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    // Configuration Firebase (à remplacer par votre configuration)
     const firebaseConfig = {
-      apiKey: "AIzaSyBuFLI9BEjdHmyplBcprSKSdCHCtv8hxtw",
-      authDomain: "combinaison-game-db.firebaseapp.com",
-      projectId: "combinaison-game-db",
-      storageBucket: "combinaison-game-db.firebasestorage.app",
-      messagingSenderId: "821232649609",
-      appId: "1:821232649609:web:507734fcc2b4aa8a4d8d58",
-      measurementId: "G-MPXBL3KRK5"
+        apiKey: "AIzaSyBuFLI9BEjdHmyplBcprSKSdCHCtv8hxtw",
+        authDomain: "combinaison-game-db.firebaseapp.com",
+        databaseURL: "https://combinaison-game-db-default-rtdb.firebaseio.com",
+        projectId: "combinaison-game-db",
+        storageBucket: "combinaison-game-db.appspot.com",
+        messagingSenderId: "821232649609",
+        appId: "1:821232649609:web:507734fcc2b4aa8a4d8d58"
     };
-    
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
+
+    // Initialisez Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
   
     const homeScreen = document.getElementById('home-screen');
     const gameScreen = document.getElementById('game-screen');
