@@ -1,20 +1,21 @@
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBuFLI9BEjdHmyplBcprSKSdCHCtv8hxtw",
-  authDomain: "combinaison-game-db.firebaseapp.com",
-  projectId: "combinaison-game-db",
-  storageBucket: "combinaison-game-db.firebasestorage.app",
-  messagingSenderId: "821232649609",
-  appId: "1:821232649609:web:507734fcc2b4aa8a4d8d58",
-  measurementId: "G-MPXBL3KRK5"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBuFLI9BEjdHmyplBcprSKSdCHCtv8hxtw",
+      authDomain: "combinaison-game-db.firebaseapp.com",
+      projectId: "combinaison-game-db",
+      storageBucket: "combinaison-game-db.firebasestorage.app",
+      messagingSenderId: "821232649609",
+      appId: "1:821232649609:web:507734fcc2b4aa8a4d8d58",
+      measurementId: "G-MPXBL3KRK5"
+    };
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  
     const homeScreen = document.getElementById('home-screen');
     const gameScreen = document.getElementById('game-screen');
     const resultScreen = document.getElementById('result-screen');
