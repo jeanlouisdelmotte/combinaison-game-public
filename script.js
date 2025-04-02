@@ -136,21 +136,37 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveScore() {
         const playerName = playerNameInput.value.trim();
         if (playerName) {
-            let scores = JSON.parse(localStorage.getItem(`scores_${currentDifficulty}`)) || [];
-            scores.push({ name: playerName, score: score, date: new Date().toLocaleString() });
-            scores.sort((a, b) => b.score - a.score);
-            if (scores.length > 10) {
-                scores.pop();
-            }
-            localStorage.setItem(`scores_${currentDifficulty}`, JSON.stringify(scores));
-            showLeaderboard(scores);
+            // Sauvegarder le score dans Firebase
+            const scoresRef = ref(database, 'scores/' + playerName);
+            set(scoresRef, {
+                name: playerName,
+                score: score,
+                date: new Date().toISOString()
+            });
+
+            // Récupérer et afficher les scores
+            fetchScores();
         }
+    }
+
+    function fetchScores() {
+        const scoresRef = ref(database, 'scores/');
+        onValue(scoresRef, (snapshot) => {
+            const data = snapshot.val();
+            const scores = Object.keys(data).map(key => ({
+                name: data[key].name,
+                score: data[key].score,
+                date: data[key].date
+            }));
+            showLeaderboard(scores);
+        });
     }
 
     function showLeaderboard(scores) {
         resultScreen.style.display = 'none';
         leaderboardScreen.style.display = 'block';
         leaderboardElement.innerHTML = '';
+        scores.sort((a, b) => b.score - a.score);
         scores.forEach((score, index) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
