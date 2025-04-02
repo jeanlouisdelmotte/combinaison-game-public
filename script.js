@@ -161,7 +161,7 @@ function saveScore() {
     const playerName = playerNameInput.value.trim();
     if (playerName) {
         // Sauvegarder le score dans Firebase avec la date formatée
-        const scoresRef = firebase.database().ref('scores');
+        const scoresRef = firebase.database().ref(`scores/${currentDifficulty}`);
         const newScoreRef = scoresRef.push();
         newScoreRef.set({
             name: playerName,
@@ -170,12 +170,13 @@ function saveScore() {
         });
 
         // Récupérer et afficher les scores
-        fetchScores();
+        fetchScores(currentDifficulty);
     }
 }
 
-function fetchScores() {
-    const scoresRef = firebase.database().ref('scores/');
+
+function fetchScores(difficulty) {
+    const scoresRef = firebase.database().ref(`scores/${difficulty}/`);
     scoresRef.on('value', (snapshot) => {
         const data = snapshot.val();
         const scores = Object.keys(data).map(key => ({
@@ -184,9 +185,10 @@ function fetchScores() {
             score: data[key].score,
             date: data[key].date
         }));
-        showLeaderboard(scores);
+        showLeaderboard(scores, difficulty);
     });
 }
+
     /*function showLeaderboard(scores) {
         resultScreen.style.display = 'none';
         leaderboardScreen.style.display = 'block';
@@ -203,7 +205,7 @@ function fetchScores() {
         });
     }*/
 
-function showLeaderboard(scores) {
+function showLeaderboard(scores, difficulty) {
     resultScreen.style.display = 'none';
     leaderboardScreen.style.display = 'block';
     leaderboardElement.innerHTML = '';
@@ -218,7 +220,10 @@ function showLeaderboard(scores) {
         `;
         leaderboardElement.appendChild(tr);
     });
+    // Afficher le titre du niveau de difficulté
+    document.getElementById('leaderboard-title').textContent = `Leaderboard - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
 }
+
 
     function replayGame() {
         leaderboardScreen.style.display = 'none';
@@ -230,12 +235,14 @@ function showLeaderboard(scores) {
         homeScreen.style.display = 'block';
     }
 
-    difficultyButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const difficulty = button.getAttribute('data-difficulty');
-            startGame(difficulty);
-        });
+difficultyButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const difficulty = button.getAttribute('data-difficulty');
+        startGame(difficulty);
+        fetchScores(difficulty); // Récupérer les scores pour le niveau de difficulté sélectionné
     });
+});
+
 
     saveScoreButton.addEventListener('click', saveScore);
     replayButton.addEventListener('click', replayGame);
