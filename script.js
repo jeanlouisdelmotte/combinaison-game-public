@@ -239,7 +239,7 @@ difficultyButtons.forEach(button => {
     button.addEventListener('click', () => {
         const difficulty = button.getAttribute('data-difficulty');
         startGame(difficulty);
-        fetchScores(difficulty); // Récupérer les scores pour le niveau de difficulté sélectionné
+        //fetchScores(difficulty); // Récupérer les scores pour le niveau de difficulté sélectionné
     });
 });
 
