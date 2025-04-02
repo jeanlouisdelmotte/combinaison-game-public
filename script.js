@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const showLeaderboardButton = document.getElementById('show-leaderboard-button');
 
-    showLeaderboardButton.addEventListener('click', () => {
+    /*showLeaderboardButton.addEventListener('click', () => {
         fetchScores(currentDifficulty);
-    });
+    });*/
 
     const difficultySettings = {
         easy: {
