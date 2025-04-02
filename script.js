@@ -146,6 +146,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }*/
 
+function formatDate(date) {
+    return date.toLocaleString('fr-FR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Europe/Paris'
+    });
+}
+    
 function saveScore() {
     const playerName = playerNameInput.value.trim();
     if (playerName) {
@@ -155,7 +166,7 @@ function saveScore() {
         newScoreRef.set({
             name: playerName,
             score: score,
-            date: new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' })
+            date: formatDate(new Date())
         });
 
         // Récupérer et afficher les scores
