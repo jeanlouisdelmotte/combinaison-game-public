@@ -1,19 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Configuration Firebase (à remplacer par votre configuration)
-    const firebaseConfig = {
-        apiKey: "AIzaSyBuFLI9BEjdHmyplBcprSKSdCHCtv8hxtw",
-        authDomain: "combinaison-game-db.firebaseapp.com",
-        databaseURL: "https://combinaison-game-db-default-rtdb.firebaseio.com",
-        projectId: "combinaison-game-db",
-        storageBucket: "combinaison-game-db.appspot.com",
-        messagingSenderId: "821232649609",
-        appId: "1:821232649609:web:507734fcc2b4aa8a4d8d58"
-    };
-
-    // Initialisez Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-  
     const homeScreen = document.getElementById('home-screen');
     const gameScreen = document.getElementById('game-screen');
     const resultScreen = document.getElementById('result-screen');
@@ -129,37 +114,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveScore() {
         const playerName = playerNameInput.value.trim();
         if (playerName) {
-            // Sauvegarder le score dans Firebase
-            const scoresRef = firebase.database().ref('scores/' + playerName);
-            scoresRef.set({
-                name: playerName,
-                score: score,
-                date: new Date().toISOString()
-            });
-
-            // Récupérer et afficher les scores
-            fetchScores();
-        }
-    }
-
-    function fetchScores() {
-        const scoresRef = firebase.database().ref('scores/');
-        scoresRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            const scores = Object.keys(data).map(key => ({
-                name: data[key].name,
-                score: data[key].score,
-                date: data[key].date
-            }));
+            let scores = JSON.parse(localStorage.getItem(`scores_${currentDifficulty}`)) || [];
+            scores.push({ name: playerName, score: score, date: new Date().toLocaleString() });
+            scores.sort((a, b) => b.score - a.score);
+            if (scores.length > 10) {
+                scores.pop();
+            }
+            localStorage.setItem(`scores_${currentDifficulty}`, JSON.stringify(scores));
             showLeaderboard(scores);
-        });
+        }
     }
 
     function showLeaderboard(scores) {
         resultScreen.style.display = 'none';
         leaderboardScreen.style.display = 'block';
         leaderboardElement.innerHTML = '';
-        scores.sort((a, b) => b.score - a.score);
         scores.forEach((score, index) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
