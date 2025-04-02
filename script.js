@@ -48,6 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentDifficulty = 'easy';
     let instructions = [];
 
+    const showLeaderboardButton = document.getElementById('show-leaderboard-button');
+    
+    showLeaderboardButton.addEventListener('click', () => {
+        fetchScores(currentDifficulty);
+    });
+    
     const difficultySettings = {
         easy: {
             time: 10,
@@ -126,11 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200); // Durée de l'animation
     }
 
-    function endGame() {
-        gameScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
-        finalScoreElement.textContent = `Votre score : ${score}`;
-    }
+function endGame() {
+    gameScreen.style.display = 'none';
+    resultScreen.style.display = 'block';
+    finalScoreElement.textContent = `Votre score : ${score}`;
+    fetchScores(currentDifficulty); // Afficher le leaderboard à la fin du jeu
+}
 
     /*function saveScore() {
         const playerName = playerNameInput.value.trim();
@@ -226,14 +233,14 @@ function showLeaderboard(scores, difficulty) {
 
 
     function replayGame() {
-        leaderboardScreen.style.display = 'none';
-        homeScreen.style.display = 'block';
-    }
+    leaderboardScreen.style.display = 'none';
+    homeScreen.style.display = 'block';
+}
 
     function returnToHome() {
-        resultScreen.style.display = 'none';
-        homeScreen.style.display = 'block';
-    }
+    resultScreen.style.display = 'none';
+    homeScreen.style.display = 'block';
+}
 
 difficultyButtons.forEach(button => {
     button.addEventListener('click', () => {
