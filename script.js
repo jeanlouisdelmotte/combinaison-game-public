@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentDifficulty = 'easy';
     let instructions = [];
     let instructionIndex = 0;
+    let currentCombo = [];
+    let comboIndex = 0;
 
     const difficultySettings = {
         noob: {
@@ -62,6 +64,35 @@ document.addEventListener('DOMContentLoaded', () => {
         extreme: {
             time: 30,
             instructions: ['Copier', 'Coller', 'Couper', 'Annuler', 'Sauvegarder', 'Sélectionner tout', 'Refaire', 'Rechercher', 'Imprimer', 'Remplacer', 'Ouvrir', 'Gras', 'Italique', 'Souligner', 'Aller à la Fin', 'Aller au Début', 'Sélectionner le mot à gauche', 'Sélectionner le mot à droite']
+        },
+        demoniac: {
+            time: 60,
+            instructions: [
+                ['Copier', 'Coller'],
+                ['Couper', 'Coller'],
+                ['Coller', 'Coller'],
+                ['Annuler', 'Refaire'],
+                ['Refaire', 'Annuler'],
+                ['Sauvegarder', 'Imprimer'],
+                ['Sélectionner tout', 'Copier', 'Coller'],
+                ['Sélectionner tout', 'Couper', 'Coller'],
+                ['Copier', 'Rechercher'],
+                ['Copier', 'Remplacer'],
+                ['Ouvrir', 'Ouvrir'],
+                ['Gras', 'Italique'],
+                ['Italique', 'Souligner'],
+                ['Souligner', 'Gras'],
+                ['Sélectionner tout', 'Gras'],
+                ['Aller au Début', 'Aller à la Fin'],
+                ['Aller à la Fin', 'Aller au Début'],
+                ['Aller au Début', 'Sélectionner le mot à droite'],
+                ['Aller à la Fin', 'Sélectionner le mot à gauche'],
+                ['Sélectionner le mot à droite', 'Couper'],
+                ['Sélectionner le mot à gauche', 'Copier'],
+                ['Sélectionner tout', 'Gras', 'Italique', 'Souligner'],
+                ['Copier', 'Coller', 'Annuler'],
+                ['Couper', 'Coller', 'Annuler']
+            ]
         }
     };
 
@@ -91,6 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
         instructions = difficultySettings[difficulty].instructions;
         timer = difficultySettings[difficulty].time;
         instructionIndex = 0;
+        comboIndex = 0;
+        currentCombo = [];
 
         homeScreen.style.display = 'none';
         gameScreen.style.display = 'block';
@@ -109,12 +142,24 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(interval);
             endGame();
         }
+        if (currentDifficulty === 'demoniac') {
+            score--;
+            scoreElement.textContent = `Score: ${score}`;
+        }
     }
 
     function setNewInstruction() {
         if (currentDifficulty === 'noob') {
             currentInstruction = instructions[instructionIndex % instructions.length];
             instructionIndex++;
+        } else if (currentDifficulty === 'demoniac') {
+            currentCombo = instructions[instructionIndex % instructions.length];
+            currentInstruction = currentCombo[comboIndex];
+            comboIndex++;
+            if (comboIndex >= currentCombo.length) {
+                comboIndex = 0;
+                instructionIndex++;
+            }
         } else {
             const randomIndex = Math.floor(Math.random() * instructions.length);
             currentInstruction = instructions[randomIndex];
@@ -234,23 +279,46 @@ document.addEventListener('DOMContentLoaded', () => {
             shiftPressed = true;
         }
         if (gameScreen.style.display === 'block' && event.key !== 'Control' && event.key !== 'Shift') {
-            const expectedKey = combinaisons[currentInstruction];
-            const isCtrlRequired = !['Aller à la Fin', 'Aller au Début'].includes(currentInstruction);
-            const isShiftRequired = ['Sélectionner le mot à gauche', 'Sélectionner le mot à droite'].includes(currentInstruction);
+            let expectedKey = combinaisons[currentInstruction];
+            let isCorrect = false;
 
-            if ((isCtrlRequired && ctrlPressed && !isShiftRequired && event.key.toLowerCase() === expectedKey) ||
-                (!isCtrlRequired && event.code.toLowerCase() === expectedKey) ||
-                (isShiftRequired && ctrlPressed && shiftPressed && event.code.toLowerCase() === expectedKey)) {
-                score++;
-                feedbackElement.textContent = 'Correct!';
-                feedbackElement.className = 'correct';
+            if (currentDifficulty === 'demoniac') {
+                if (event.key.toLowerCase() === expectedKey && comboIndex < currentCombo.length) {
+                    comboIndex++;
+                    if (comboIndex >= currentCombo.length) {
+                        score++;
+                        feedbackElement.textContent = 'Correct!';
+                        feedbackElement.className = 'correct';
+                        comboIndex = 0;
+                        instructionIndex++;
+                        setNewInstruction();
+                    }
+                } else {
+                    score--;
+                    feedbackElement.textContent = 'Incorrect!';
+                    feedbackElement.className = 'incorrect';
+                    comboIndex = 0;
+                    instructionIndex++;
+                    setNewInstruction();
+                }
             } else {
-                score--;
-                feedbackElement.textContent = 'Incorrect!';
-                feedbackElement.className = 'incorrect';
+                const isCtrlRequired = !['Aller à la Fin', 'Aller au Début'].includes(currentInstruction);
+                const isShiftRequired = ['Sélectionner le mot à gauche', 'Sélectionner le mot à droite'].includes(currentInstruction);
+
+                if ((isCtrlRequired && ctrlPressed && !isShiftRequired && event.key.toLowerCase() === expectedKey) ||
+                    (!isCtrlRequired && event.code.toLowerCase() === expectedKey) ||
+                    (isShiftRequired && ctrlPressed && shiftPressed && event.code.toLowerCase() === expectedKey)) {
+                    score++;
+                    feedbackElement.textContent = 'Correct!';
+                    feedbackElement.className = 'correct';
+                } else {
+                    score--;
+                    feedbackElement.textContent = 'Incorrect!';
+                    feedbackElement.className = 'incorrect';
+                }
+                setNewInstruction();
             }
             scoreElement.textContent = `Score: ${score}`;
-            setNewInstruction();
             event.preventDefault();
         }
     });
