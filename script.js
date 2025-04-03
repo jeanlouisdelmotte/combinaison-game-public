@@ -40,8 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let shiftPressed = false;
     let currentDifficulty = 'easy';
     let instructions = [];
+    let instructionIndex = 0;
 
     const difficultySettings = {
+        noob: {
+            time: 10,
+            instructions: ['Copier', 'Coller']
+        },
         easy: {
             time: 10,
             instructions: ['Copier', 'Coller', 'Couper', 'Annuler', 'Sauvegarder']
@@ -85,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentDifficulty = difficulty;
         instructions = difficultySettings[difficulty].instructions;
         timer = difficultySettings[difficulty].time;
+        instructionIndex = 0;
 
         homeScreen.style.display = 'none';
         gameScreen.style.display = 'block';
@@ -106,8 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setNewInstruction() {
-        const randomIndex = Math.floor(Math.random() * instructions.length);
-        currentInstruction = instructions[randomIndex];
+        if (currentDifficulty === 'noob') {
+            currentInstruction = instructions[instructionIndex % instructions.length];
+            instructionIndex++;
+        } else {
+            const randomIndex = Math.floor(Math.random() * instructions.length);
+            currentInstruction = instructions[randomIndex];
+        }
         instructionElement.textContent = currentInstruction;
 
         // Ajouter la classe pour l'animation
