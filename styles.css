@@ -153,6 +153,14 @@ button:hover {
     color: white;
 }
 
+.difficulty-btn[data-difficulty="hard"],
+.difficulty-btn[data-difficulty="extreme"],
+.difficulty-btn[data-difficulty="demoniac"] {
+    display: block;
+    width: 100%;
+}
+
+
 @keyframes glow {
     0%, 100% { text-shadow: 0 0 20px #ffffff, 0 0 30px #ffffff, 0 0 40px #ffffff; }
     50% { text-shadow: none; }
