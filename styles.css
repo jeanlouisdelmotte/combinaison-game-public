@@ -129,7 +129,7 @@ button:hover {
 }
 
 .difficulty-btn[data-difficulty="noob"] {
-    background-color: white; /* Blanc */
+    background-color: #00aae6; /* Blanc */
 }
 
 .difficulty-btn[data-difficulty="easy"] {
