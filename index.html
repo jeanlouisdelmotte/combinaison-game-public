@@ -159,7 +159,7 @@
         <button id="return-home-button">Retour à l'Accueil</button>
     </div>
 
-    <div id="leaderboard-screen" class="screen" style="display: none;">
+    <!--<div id="leaderboard-screen" class="screen" style="display: none;">
         <h1>Classement des Meilleurs Scores</h1>
         <table id="leaderboard">
             <thead>
@@ -171,11 +171,35 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Scores will be dynamically inserted here -->
+
             </tbody>
         </table>
         <button id="replay-button">Rejouer</button>
+    </div>-->
+
+<div id="leaderboard-screen" class="screen" style="display: none;">
+    <h1>Classement des Meilleurs Scores</h1>
+    <div id="leaderboard-tabs">
+        <button class="leaderboard-tab" data-difficulty="easy">Facile</button>
+        <button class="leaderboard-tab" data-difficulty="medium">Moyen</button>
+        <button class="leaderboard-tab" data-difficulty="hard">Difficile</button>
+        <button class="leaderboard-tab" data-difficulty="extreme">Extrême</button>
     </div>
+    <table id="leaderboard">
+        <thead>
+            <tr>
+                <th>Rang</th>
+                <th>Nom</th>
+                <th>Score</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Scores will be dynamically inserted here -->
+        </tbody>
+    </table>
+    <button id="replay-button">Rejouer</button>
+</div>
 
     <script src="script.js"></script>
 </body>
