@@ -22,10 +22,11 @@
             <li>Bonnes réponses : +1 point, Mauvaises réponses : -1 point.</li>
         </ul>
         <div id="difficulty-buttons">
-            <button class="difficulty-btn" data-difficulty="easy">Facile (10s)</button>
-            <button class="difficulty-btn" data-difficulty="medium">Moyen (15s)</button>
-            <button class="difficulty-btn" data-difficulty="hard">Difficile (20s)</button>
-            <button class="difficulty-btn" data-difficulty="extreme">Extrême (30s)</button>
+		<button class="difficulty-btn" data-difficulty="noob">Noob</button>
+            	<button class="difficulty-btn" data-difficulty="easy">Facile (10s)</button>
+            	<button class="difficulty-btn" data-difficulty="medium">Moyen (15s)</button>
+            	<button class="difficulty-btn" data-difficulty="hard">Difficile (20s)</button>
+            	<button class="difficulty-btn" data-difficulty="extreme">Extrême (30s)</button>
         </div>
 		<div>
 			<button id="tutorial-btn" class="tutorial-btn">
@@ -180,7 +181,8 @@
 <div id="leaderboard-screen" class="screen" style="display: none;">
     <h1>Classement des Meilleurs Scores</h1>
     <div id="leaderboard-tabs">
-        <button class="leaderboard-tab" data-difficulty="easy">Facile</button>
+        <button class="difficulty-btn" data-difficulty="noob">Noob</button>
+	<button class="leaderboard-tab" data-difficulty="easy">Facile</button>
         <button class="leaderboard-tab" data-difficulty="medium">Moyen</button>
         <button class="leaderboard-tab" data-difficulty="hard">Difficile</button>
         <button class="leaderboard-tab" data-difficulty="extreme">Extrême</button>
