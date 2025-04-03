@@ -154,12 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
             instructionIndex++;
         } else if (currentDifficulty === 'demoniac') {
             currentCombo = instructions[instructionIndex % instructions.length];
-            currentInstruction = currentCombo[comboIndex];
-            comboIndex++;
-            if (comboIndex >= currentCombo.length) {
-                comboIndex = 0;
-                instructionIndex++;
-            }
+            currentInstruction = currentCombo.join(' / ');
+            comboIndex = 0;
+            instructionIndex++;
         } else {
             const randomIndex = Math.floor(Math.random() * instructions.length);
             currentInstruction = instructions[randomIndex];
@@ -283,7 +280,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let isCorrect = false;
 
             if (currentDifficulty === 'demoniac') {
-                if (event.key.toLowerCase() === expectedKey && comboIndex < currentCombo.length) {
+                expectedKey = combinaisons[currentCombo[comboIndex]];
+                if (event.key.toLowerCase() === expectedKey) {
                     comboIndex++;
                     if (comboIndex >= currentCombo.length) {
                         score++;
