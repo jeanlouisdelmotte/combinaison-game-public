@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const backBtn = document.getElementById('back-btn');
     const tutorialScreen = document.getElementById('tutorial-screen');
     const leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
+    const highscoresBtn = document.getElementById('highscores-btn'); // Nouveau bouton pour accéder aux highscores
 
     let score = 0;
     let timer = 10;
