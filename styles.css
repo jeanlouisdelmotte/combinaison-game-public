@@ -1,259 +1,283 @@
-body {
-    font-family: 'Luckiest Guy', cursive;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    color: #ffffff;
-	background-color: black;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const firebaseConfig = {
+        apiKey: "AIzaSyBuFLI9BEjdHmyplBcprSKSdCHCtv8hxtw",
+        authDomain: "combinaison-game-db.firebaseapp.com",
+        databaseURL: "https://combinaison-game-db-default-rtdb.europe-west1.firebasedatabase.app/",
+        projectId: "combinaison-game-db",
+        storageBucket: "combinaison-game-db.appspot.com",
+        messagingSenderId: "821232649609",
+        appId: "1:821232649609:web:507734fcc2b4aa8a4d8d58"
+    };
 
-.screen {
-    text-align: center;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: rgba(0, 0, 0, 0.7);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    width: 800px;
-}
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-h1 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
-    animation: glow 1.5s infinite;
-}
+    const homeScreen = document.getElementById('home-screen');
+    const gameScreen = document.getElementById('game-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const leaderboardScreen = document.getElementById('leaderboard-screen');
+    const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+    const timerElement = document.getElementById('timer');
+    const instructionElement = document.getElementById('instruction');
+    const scoreElement = document.getElementById('score');
+    const feedbackElement = document.getElementById('feedback');
+    const finalScoreElement = document.getElementById('final-score');
+    const playerNameInput = document.getElementById('player-name');
+    const saveScoreButton = document.getElementById('save-score-button');
+    const leaderboardElement = document.getElementById('leaderboard').querySelector('tbody');
+    const replayButton = document.getElementById('replay-button');
+    const returnHomeButton = document.getElementById('return-home-button');
+    const tutorialBtn = document.getElementById('tutorial-btn');
+    const backBtn = document.getElementById('back-btn');
+    const tutorialScreen = document.getElementById('tutorial-screen');
+    const leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
 
-#home-screen ul {
-    text-align: left;
-    list-style-position: inside;
-}
+    let score = 0;
+    let timer = 10;
+    let currentInstruction = '';
+    let interval;
+    let ctrlPressed = false;
+    let shiftPressed = false;
+    let currentDifficulty = 'easy';
+    let instructions = [];
+    let instructionIndex = 0;
 
-#timer, #score {
-    font-size: 2em;
-    margin: 15px 0;
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 10px;
-    border-radius: 5px;
-}
+    const difficultySettings = {
+        noob: {
+            time: 10,
+            instructions: ['Copier', 'Coller']
+        },
+        easy: {
+            time: 10,
+            instructions: ['Copier', 'Coller', 'Couper', 'Annuler', 'Sauvegarder']
+        },
+        medium: {
+            time: 15,
+            instructions: ['Copier', 'Coller', 'Couper', 'Annuler', 'Sauvegarder', 'Sélectionner tout', 'Refaire', 'Rechercher']
+        },
+        hard: {
+            time: 20,
+            instructions: ['Copier', 'Coller', 'Couper', 'Annuler', 'Sauvegarder', 'Sélectionner tout', 'Refaire', 'Rechercher', 'Imprimer', 'Remplacer', 'Ouvrir']
+        },
+        extreme: {
+            time: 30,
+            instructions: ['Copier', 'Coller', 'Couper', 'Annuler', 'Sauvegarder', 'Sélectionner tout', 'Refaire', 'Rechercher', 'Imprimer', 'Remplacer', 'Ouvrir', 'Gras', 'Italique', 'Souligner', 'Aller à la Fin', 'Aller au Début', 'Sélectionner le mot à gauche', 'Sélectionner le mot à droite']
+        }
+    };
 
-#instruction {
-    font-size: 4em;
-    margin: 15px 0;
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 10px;
-    border-radius: 5px;
-    font-family: 'Arial Black', sans-serif;
-}
+    const combinaisons = {
+        'Copier': 'c',
+        'Coller': 'v',
+        'Couper': 'x',
+        'Annuler': 'z',
+        'Sauvegarder': 's',
+        'Sélectionner tout': 'a',
+        'Refaire': 'y',
+        'Rechercher': 'f',
+        'Imprimer': 'p',
+        'Remplacer': 'h',
+        'Ouvrir': 'o',
+        'Gras': 'b',
+        'Italique': 'i',
+        'Souligner': 'u',
+        'Aller à la Fin': 'end',
+        'Aller au Début': 'home',
+        'Sélectionner le mot à gauche': 'arrowleft',
+        'Sélectionner le mot à droite': 'arrowright'
+    };
 
-#feedback {
-    font-size: 1.5em;
-    margin-top: 20px;
-    animation: fadein 2s;
-}
+    function startGame(difficulty) {
+        currentDifficulty = difficulty;
+        instructions = difficultySettings[difficulty].instructions;
+        timer = difficultySettings[difficulty].time;
+        instructionIndex = 0;
 
-.correct {
-    color: #4CAF50;
-    animation: flash-correct 0.5s;
-}
+        homeScreen.style.display = 'none';
+        gameScreen.style.display = 'block';
+        score = 0;
+        timerElement.textContent = timer;
+        scoreElement.textContent = `Score: ${score}`;
+        feedbackElement.textContent = '';
+        setNewInstruction();
+        interval = setInterval(updateTimer, 1000);
+    }
 
-.incorrect {
-    color: #FF5252;
-    animation: shake 0.5s;
-}
+    function updateTimer() {
+        timer--;
+        timerElement.textContent = timer;
+        if (timer <= 0) {
+            clearInterval(interval);
+            endGame();
+        }
+    }
 
-button {
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 1.2em;
-    padding: 10px 20px;
-    margin-top: 20px;
-    background-color: #FFD700;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+    function setNewInstruction() {
+        if (currentDifficulty === 'noob') {
+            currentInstruction = instructions[instructionIndex % instructions.length];
+            instructionIndex++;
+        } else {
+            const randomIndex = Math.floor(Math.random() * instructions.length);
+            currentInstruction = instructions[randomIndex];
+        }
+        instructionElement.textContent = currentInstruction;
 
-button:hover {
-    background-color: #FFBF00;
-}
+        // Ajouter la classe pour l'animation
+        instructionElement.classList.add('highlight');
 
-#leaderboard {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: #3B3B3B; /* Fond gris anthracite */
-    color: #ffffff; /* Texte en blanc pour contraster */
-}
+        // Retirer la classe après l'animation pour permettre de la réutiliser
+        setTimeout(() => {
+            instructionElement.classList.remove('highlight');
+        }, 200); // Durée de l'animation
+    }
 
-#leaderboard th, #leaderboard td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #555; /* Bordure plus sombre pour mieux contraster */
-}
+    function endGame() {
+        gameScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+        finalScoreElement.textContent = `Votre score : ${score}`;
+        // Ne pas afficher le leaderboard automatiquement à la fin du jeu
+    }
 
-#leaderboard th {
-    background-color: #4a4a4a; /* En-tête légèrement plus sombre */
-}
+    function formatDate(date) {
+        return date.toLocaleString('fr-FR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'Europe/Paris'
+        });
+    }
 
-#leaderboard tr:nth-child(even) {
-    background-color: #2A2A2A; /* Fond plus sombre pour les lignes paires */
-}
+    function saveScore() {
+        const playerName = playerNameInput.value.trim();
+        if (playerName) {
+            // Sauvegarder le score dans Firebase avec la date formatée
+            const scoresRef = firebase.database().ref(`scores/${currentDifficulty}`);
+            const newScoreRef = scoresRef.push();
+            newScoreRef.set({
+                name: playerName,
+                score: score,
+                date: formatDate(new Date())
+            });
 
-#leaderboard tr:hover {
-    background-color: #111111; /* Effet de survol */
-}
+            // Récupérer et afficher les scores
+            fetchScores(currentDifficulty);
+            resultScreen.style.display = 'none';
+            leaderboardScreen.style.display = 'block';
+        }
+    }
 
-#leaderboard .first {
-    color: #FFD700; /* Or */
-}
+    function fetchScores(difficulty) {
+        const scoresRef = firebase.database().ref(`scores/${difficulty}/`);
+        scoresRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            const scores = Object.keys(data).map(key => ({
+                id: key,
+                name: data[key].name,
+                score: data[key].score,
+                date: data[key].date
+            }));
+            showLeaderboard(scores, difficulty);
+        });
+    }
 
-#leaderboard .second {
-    color: #C0C0C0; /* Argent */
-}
+    function showLeaderboard(scores, difficulty) {
+        leaderboardElement.innerHTML = '';
+        scores.sort((a, b) => b.score - a.score);
+        scores.forEach((score, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="${index === 0 ? 'first' : index === 1 ? 'second' : index === 2 ? 'third' : ''}">${index + 1}</td>
+                <td>${score.name}</td>
+                <td>${score.score}</td>
+                <td>${score.date}</td>
+            `;
+            leaderboardElement.appendChild(tr);
+        });
+        // Afficher le titre du niveau de difficulté
+        document.querySelector('#leaderboard-screen h1').textContent = `Classement des Meilleurs Scores - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
+    }
 
-#leaderboard .third {
-    color: #CD7F32; /* Bronze */
-}
+    function replayGame() {
+        leaderboardScreen.style.display = 'none';
+        homeScreen.style.display = 'block';
+    }
 
-#home-screen p, #home-screen ul {
-    font-family: 'Arial', sans-serif;
-}
+    function returnToHome() {
+        resultScreen.style.display = 'none';
+        homeScreen.style.display = 'block';
+    }
 
-#difficulty-buttons {
-    margin-top: 20px;
-}
+    difficultyButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const difficulty = button.getAttribute('data-difficulty');
+            startGame(difficulty);
+        });
+    });
 
-.difficulty-btn {
-    margin: 5px;
-}
+    saveScoreButton.addEventListener('click', saveScore);
+    replayButton.addEventListener('click', replayGame);
+    returnHomeButton.addEventListener('click', returnToHome);
 
-.difficulty-btn[data-difficulty="easy"] {
-    background-color: #4CAF50; /* Vert doux */
-}
+    leaderboardTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const difficulty = tab.getAttribute('data-difficulty');
+            fetchScores(difficulty);
+        });
+    });
 
-.difficulty-btn[data-difficulty="medium"] {
-    background-color: #FFC107; /* Jaune moyen */
-}
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Control') {
+            ctrlPressed = true;
+        }
+        if (event.key === 'Shift') {
+            shiftPressed = true;
+        }
+        if (gameScreen.style.display === 'block' && event.key !== 'Control' && event.key !== 'Shift') {
+            const expectedKey = combinaisons[currentInstruction];
+            const isCtrlRequired = !['Aller à la Fin', 'Aller au Début'].includes(currentInstruction);
+            const isShiftRequired = ['Sélectionner le mot à gauche', 'Sélectionner le mot à droite'].includes(currentInstruction);
 
-.difficulty-btn[data-difficulty="hard"] {
-    background-color: #FF5722; /* Orange vif */
-}
+            if ((isCtrlRequired && ctrlPressed && !isShiftRequired && event.key.toLowerCase() === expectedKey) ||
+                (!isCtrlRequired && event.code.toLowerCase() === expectedKey) ||
+                (isShiftRequired && ctrlPressed && shiftPressed && event.code.toLowerCase() === expectedKey)) {
+                score++;
+                feedbackElement.textContent = 'Correct!';
+                feedbackElement.className = 'correct';
+            } else {
+                score--;
+                feedbackElement.textContent = 'Incorrect!';
+                feedbackElement.className = 'incorrect';
+            }
+            scoreElement.textContent = `Score: ${score}`;
+            setNewInstruction();
+            event.preventDefault();
+        }
+    });
 
-.difficulty-btn[data-difficulty="extreme"] {
-    background-color: #FF0000; /* Rouge tranchant */
-}
+    document.addEventListener('keyup', event => {
+        if (event.key === 'Control') {
+            ctrlPressed = false;
+        }
+        if (event.key === 'Shift') {
+            shiftPressed = false;
+        }
+    });
 
-@keyframes glow {
-    0%, 100% { text-shadow: 0 0 20px #ffffff, 0 0 30px #ffffff, 0 0 40px #ffffff; }
-    50% { text-shadow: none; }
-}
+    // Désactiver les raccourcis clavier du navigateur
+    document.addEventListener('keydown', event => {
+        if (event.ctrlKey && ['c', 'v', 's', 'a', 'z', 'y', 'f', 'p', 'h', 'o', 'b', 'i', 'u'].includes(event.key)) {
+            event.preventDefault();
+        }
+    });
 
-@keyframes fadein {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+    tutorialBtn.addEventListener('click', () => {
+        homeScreen.style.display = 'none';
+        tutorialScreen.style.display = 'block';
+    });
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-@keyframes flash-correct {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-}
-
-@keyframes highlight {
-    0%, 100% { color: #ffffff; }
-    50% { color: #707070; }
-}
-
-.highlight {
-    animation: highlight 0.2s;
-}
-
-#result-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#player-name {
-    margin-bottom: 20px;
-    padding: 10px;
-    font-size: 1.2em;
-    text-align: center;
-}
-
-#save-score-button, #return-home-button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    background-color: #FFD700;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#save-score-button:hover, #return-home-button:hover {
-    background-color: #FFBF00;
-}
-
-.tutorial-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-	background-color: white;
-}
-
-#tutorial-screen {
-    text-align: center;
-    background-color: #3B3B3B; /* Fond gris anthracite */
-    color: #ffffff; /* Texte en blanc pour contraster */
-	width: 800px;
-}
-
-#tutorial-screen table {
-    margin: 20px auto;
-    border-collapse: collapse;
-    width: 80%;
-}
-
-#tutorial-screen th, #tutorial-screen td {
-    border-bottom: 1px solid #555; /* Bordure plus sombre pour mieux contraster */
-    padding: 10px;
-    text-align: left;
-}
-
-#tutorial-screen th {
-    background-color: #4a4a4a; /* En-tête légèrement plus sombre */
-}
-
-#tutorial-screen tr:nth-child(even) {
-    background-color: #2A2A2A; /* Fond plus sombre pour les lignes paires */
-}
-
-#tutorial-screen tr:hover {
-    background-color: #111111; /* Effet de survol */
-}
-
-#back-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.hidden {
-    display: none;
-}
+    backBtn.addEventListener('click', () => {
+        tutorialScreen.style.display = 'none';
+        homeScreen.style.display = 'block';
+    });
+});
