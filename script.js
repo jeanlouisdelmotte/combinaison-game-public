@@ -277,6 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    highscoresBtn.addEventListener('click', () => {
+        homeScreen.style.display = 'none';
+        leaderboardScreen.style.display = 'block';
+        fetchScores('easy'); // Afficher les scores du niveau "Facile" par défaut
+    });
+    
     document.addEventListener('keydown', event => {
         if (event.key === 'Control') {
             ctrlPressed = true;
