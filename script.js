@@ -310,6 +310,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         setNewInstruction();
                     }
                 } else {
+                    if (currentDifficulty === 'demoniac') {
+                        score--;score--;score--;score--;
+                        scoreElement.textContent = `Score: ${score}`;
+                    }
                     score--;
                     feedbackElement.textContent = 'Incorrect!';
                     feedbackElement.className = 'incorrect';
