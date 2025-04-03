@@ -134,10 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ajouter la classe de flammes si le mode est "Démoniaque"
         if (difficulty === 'demoniac') {
-            gameScreen.classList.add('flames-background');
+            document.body.classList.add('flames-background');
         } else {
-            gameScreen.classList.remove('flames-background');
+            document.body.classList.remove('flames-background');
         }
+
 
         setNewInstruction();
         interval = setInterval(updateTimer, 1000);
