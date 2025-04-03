@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tutorialBtn = document.getElementById('tutorial-btn');
     const backBtn = document.getElementById('back-btn');
     const tutorialScreen = document.getElementById('tutorial-screen');
+    const leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
 
     let score = 0;
     let timer = 10;
@@ -39,12 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let shiftPressed = false;
     let currentDifficulty = 'easy';
     let instructions = [];
-
-    const showLeaderboardButton = document.getElementById('show-leaderboard-button');
-
-    /*showLeaderboardButton.addEventListener('click', () => {
-        fetchScores(currentDifficulty);
-    });*/
 
     const difficultySettings = {
         easy: {
@@ -156,6 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Récupérer et afficher les scores
             fetchScores(currentDifficulty);
+            resultScreen.style.display = 'none';
+            leaderboardScreen.style.display = 'block';
         }
     }
 
@@ -174,8 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showLeaderboard(scores, difficulty) {
-        resultScreen.style.display = 'none';
-        leaderboardScreen.style.display = 'block';
         leaderboardElement.innerHTML = '';
         scores.sort((a, b) => b.score - a.score);
         scores.forEach((score, index) => {
@@ -189,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
             leaderboardElement.appendChild(tr);
         });
         // Afficher le titre du niveau de difficulté
-        document.getElementById('leaderboard-title').textContent = `Leaderboard - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
+        document.querySelector('#leaderboard-screen h1').textContent = `Classement des Meilleurs Scores - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
     }
 
     function replayGame() {
@@ -212,6 +207,13 @@ document.addEventListener('DOMContentLoaded', () => {
     saveScoreButton.addEventListener('click', saveScore);
     replayButton.addEventListener('click', replayGame);
     returnHomeButton.addEventListener('click', returnToHome);
+
+    leaderboardTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const difficulty = tab.getAttribute('data-difficulty');
+            fetchScores(difficulty);
+        });
+    });
 
     document.addEventListener('keydown', event => {
         if (event.key === 'Control') {
