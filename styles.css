@@ -260,6 +260,14 @@ button:hover {
     background-color: #111111; /* Effet de survol */
 }
 
+.highscores-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+	background-color: white;
+}
+
 #back-btn {
     margin-top: 20px;
     padding: 10px 20px;
