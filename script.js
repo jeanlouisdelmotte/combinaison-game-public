@@ -246,7 +246,9 @@ document.addEventListener('DOMContentLoaded', () => {
             leaderboardElement.appendChild(tr);
         });
         // Afficher le titre du niveau de difficulté
-        document.querySelector('#leaderboard-screen h1').textContent = `Classement des Meilleurs Scores - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
+        //document.querySelector('#leaderboard-screen h1').textContent = `Classement des Meilleurs Scores - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
+        document.querySelector('#leaderboard-screen h1').innerHTML = `Classement des Meilleurs Scores<br>- ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
+
     }
 
     function replayGame() {
