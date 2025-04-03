@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         timerElement.textContent = timer;
         scoreElement.textContent = `Score: ${score}`;
         feedbackElement.textContent = '';
-        
+
         // Ajouter la classe de flammes si le mode est "Démoniaque"
         if (difficulty === 'demoniac') {
             gameScreen.classList.add('flames-background');
@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
             gameScreen.classList.remove('flames-background');
         }
 
-        
         setNewInstruction();
         interval = setInterval(updateTimer, 1000);
     }
