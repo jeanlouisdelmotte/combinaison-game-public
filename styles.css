@@ -126,6 +126,10 @@ button:hover {
 
 .difficulty-btn {
     margin: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
 }
 
 .difficulty-btn[data-difficulty="noob"] {
