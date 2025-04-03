@@ -270,3 +270,33 @@ button:hover {
 .hidden {
     display: none;
 }
+
+/* Ajoutez cette classe pour l'animation de flammes */
+.flames-background {
+    background: #000;
+    position: relative;
+    overflow: hidden;
+}
+
+.flames-background::before,
+.flames-background::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top left, rgba(255, 69, 0, 0.5), transparent 70%);
+    animation: flames 3s infinite;
+}
+
+.flames-background::after {
+    animation-delay: -1.5s;
+}
+
+@keyframes flames {
+    0%, 100% {
+        transform: translateY(-10%) scale(1);
+    }
+    50% {
+        transform: translateY(10%) scale(1.1);
+    }
+}
